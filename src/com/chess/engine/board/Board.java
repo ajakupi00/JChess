@@ -23,6 +23,7 @@ public class Board {
 
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
     private Board(Builder builder){
         this.gameBoard = createGameBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
@@ -33,6 +34,7 @@ public class Board {
 
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
+        this.currentPlayer = null;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class Board {
     public Player blackPlayer(){
         return this.blackPlayer;
     }
+
     public Collection<Piece> getBlackPieces(){
         return this.blackPieces;
     }
@@ -140,6 +143,11 @@ public class Board {
 
         return builder.build();
     }
+
+    public Player currentPlayer() {
+        return this.currentPlayer;
+    }
+
     public static class Builder{
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
