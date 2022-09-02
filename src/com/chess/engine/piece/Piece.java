@@ -37,6 +37,7 @@ public abstract class Piece {
         return this.pieceType;
     }
     public abstract Collection<Move> calculateLegalMoves(final Board board);
+    public abstract Piece movePiece(Move move);
 
     public enum PieceType{
         PAWN("P"){
