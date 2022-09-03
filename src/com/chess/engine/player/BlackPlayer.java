@@ -76,4 +76,5 @@ public class BlackPlayer extends Player {
         return ImmutableList.copyOf(kingCastles);
     }
 
+
 }
