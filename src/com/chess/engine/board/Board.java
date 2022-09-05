@@ -30,8 +30,8 @@ public class Board {
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
 
-        final Collection<Move> whiteStandardLegalMoves = calcaulateLegalMoves(this.whitePieces);
-        final Collection<Move> blackStandardLegalMoves = calcaulateLegalMoves(this.blackPieces);
+        final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
+        final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
 
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
@@ -68,7 +68,7 @@ public class Board {
         return this.whitePieces;
     }
 
-    private Collection<Move> calcaulateLegalMoves(final Collection<Piece> pieces) {
+    private Collection<Move> calculateLegalMoves(final Collection<Piece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();
         for(final Piece piece : pieces){
             legalMoves.addAll(piece.calculateLegalMoves(this));
@@ -125,7 +125,7 @@ public class Board {
         builder.setPiece(new Pawn(15, Alliance.BLACK));
 
         // White Layout
-        builder.setPiece(new Rook(48, Alliance.WHITE));
+        builder.setPiece(new Pawn(48, Alliance.WHITE));
         builder.setPiece(new Pawn(49, Alliance.WHITE));
         builder.setPiece(new Pawn(50, Alliance.WHITE));
         builder.setPiece(new Pawn(51, Alliance.WHITE));
@@ -152,6 +152,7 @@ public class Board {
     public Iterable<Move> getAllLegalMoves() {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
     }
+
 
     public static class Builder{
         Map<Integer, Piece> boardConfig;

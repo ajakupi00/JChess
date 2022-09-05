@@ -80,7 +80,7 @@ public abstract class Player {
         return false;
     }
     public MoveTransition makeMove(final Move move){
-        if(!isMoveLegal(move)){
+        if(!this.legalMoves.contains(move)){
             return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitionBoard = move.execute();
