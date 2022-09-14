@@ -32,8 +32,13 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 public class Table {
 
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
+
     private Board chessBoard;
+
 
     private Tile sourceTile;
     private Tile destinationTile;
@@ -56,11 +61,16 @@ public class Table {
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.chessBoard = Board.createStandardBoard();
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
-        this.highlightLegalMoves = false;
-        this.gameFrame.add(boardPanel, BorderLayout.CENTER);
+        this.highlightLegalMoves = true;
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
+        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
     }
 
@@ -179,6 +189,31 @@ public class Table {
             repaint();
         }
     }
+
+    public static class MoveLog{
+        private final List<Move> moves;
+        MoveLog(){
+            this.moves = new ArrayList<>();
+        }
+        public List<Move> getMoves(){return this.moves;}
+        public void addMove(final Move move){
+            this.moves.add(move);
+        }
+        public int size(){
+            return this.moves.size();
+        }
+        public void clear(){
+            this.moves.clear();
+        }
+        public Move removeMove(int index){
+            return this.moves.remove(index);
+        }
+        public boolean removeMove(final Move move){
+            return this.moves.remove(move);
+        }
+
+
+    }
     private class TilePanel extends JPanel{
         private final int tileId;
 
@@ -214,8 +249,9 @@ public class Table {
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if(transition.getMoveStatus().isDone()){
                                 chessBoard = transition.getTransitionBoard();
-
+                                moveLog.addMove(move);
                                 //TODO add the move was made to move log
+
                             }
                             sourceTile = null;
                             humanMovedPiece = null;
@@ -224,6 +260,8 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(chessBoard);
                                 System.out.println("Current player:" + chessBoard.currentPlayer().getAlliance());
                             }
@@ -269,8 +307,9 @@ public class Table {
                 try {
                     final BufferedImage image =
                             ImageIO.read(new File(defaultPieceImagesPath + board.getTile(this.tileId).getPiece().getPieceAlliance().toString().substring(0,1) +
-                                                    board.getTile(this.tileId).getPiece().toString() + ".gif"));
-                    add(new JLabel(new ImageIcon(image)));
+                                                    board.getTile(this.tileId).getPiece().toString() + ".png"));
+                    Image qualityImage = image.getScaledInstance(48,48, Image.SCALE_SMOOTH);
+                    add(new JLabel(new ImageIcon(qualityImage)));
                 } catch (IOException e) {
                     System.out.println("ERROR");
                     throw new RuntimeException(e);

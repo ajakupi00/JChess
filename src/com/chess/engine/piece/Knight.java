@@ -5,6 +5,7 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
@@ -18,7 +19,11 @@ public class Knight extends Piece {
     private final static int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -6, 6, 10, 15, 17};
 
     public Knight(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.KNIGHT, piecePosition, pieceAlliance);
+        super(PieceType.KNIGHT, piecePosition, pieceAlliance, true);
+    }
+
+    public Knight(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove) {
+        super(PieceType.KNIGHT, piecePosition, pieceAlliance, isFirstMove);
     }
 
     @Override
@@ -41,7 +46,7 @@ public class Knight extends Piece {
                     final Piece pieceAtDesitnation = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDesitnation.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
-                        legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDesitnation));
+                        legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDesitnation));
                     }
                 }
             }
