@@ -48,7 +48,7 @@ public class BoardUtils {
         throw  new RuntimeException("You cannot instantiate this class!");
     }
 
-    private static boolean[] initRow(int rowNumber) {
+    private static boolean[]   initRow(int rowNumber) {
         final boolean[] row = new boolean[NUM_TILES];
         do{
             row[rowNumber] = true;
