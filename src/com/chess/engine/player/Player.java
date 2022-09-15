@@ -65,7 +65,7 @@ public abstract class Player {
     public boolean isInStaleMate(){
         return !this.isInCheck && !hasEscapeMoves();
     }
-    public boolean IsCastled(){
+    public boolean isCastled(){
         return false;
     }
 
