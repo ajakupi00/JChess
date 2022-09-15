@@ -36,6 +36,7 @@ public class Table {
     private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private final MoveLog moveLog;
+    private final GameSetup gameSetup;
 
     private Board chessBoard;
 
@@ -55,7 +56,10 @@ public class Table {
 
     private final Color lightTileColor = Color.decode("#F5E7C0");
     private final Color darkTileColor = Color.decode("#66433B");
-    public Table(){
+
+    private static final Table INSTANCE = new Table();
+
+    private Table(){
         this.gameFrame = new JFrame("JChess");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -66,12 +70,21 @@ public class Table {
         this.chessBoard = Board.createStandardBoard();
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
+        this.gameSetup = new GameSetup(this.gameFrame, true);
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = true;
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
+    }
+
+    public static Table get(){
+        return INSTANCE;
+    }
+
+    private GameSetup getGameSetup(){
+        return this.gameSetup;
     }
 
     private JMenuBar createTableMenuBar() {
@@ -134,6 +147,25 @@ public class Table {
         return preferencesMenu;
     }
 
+    private JMenu createOptionsMenu(){
+        final JMenu optionsMenu = new JMenu("Options");
+
+        final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
+        setupGameMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Table.get().getGameSetup().promptUser();
+                Table.get().setupUpdate(Table.get().getGameSetup());
+            }
+        });
+
+        optionsMenu.add(setupGameMenuItem);
+        return optionsMenu;
+    }
+
+    private void setupUpdate(final GameSetup gameSetup){
+
+    }
 
 
     public enum BoardDirection{
@@ -214,6 +246,12 @@ public class Table {
 
 
     }
+
+    public enum PlayerType{
+        HUMAN,
+        COMPUTER;
+    }
+
     private class TilePanel extends JPanel{
         private final int tileId;
 

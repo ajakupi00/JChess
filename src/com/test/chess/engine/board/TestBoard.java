@@ -52,12 +52,8 @@ public class TestBoard {
          assertTrue(t3.getMoveStatus().isDone());
 
          final MoveStrategy strategy = new MiniMax(4);
-
          final Move aiMove = strategy.execute(t3.getTransitionBoard());
-
          final Move bestMove = Move.MoveFactory.createMove(t3.getTransitionBoard(), BoardUtils.getCoordinateAtPosition("d8"), BoardUtils.getCoordinateAtPosition("h4"));
-
-
 
          assertEquals(aiMove, bestMove);
 
